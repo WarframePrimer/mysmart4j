@@ -6,7 +6,8 @@
   <artifactId>smart4j-framework</artifactId>
   <version>1.0-SNAPSHOT</version>
   <!--打包成jar包-->
-  <packaging>pom</packaging>
+  <packaging>jar</packaging>
+  <!--<packaging>pom</packaging>-->
 
   <name>smart4j-framework</name>
   <url>http://maven.apache.org</url>

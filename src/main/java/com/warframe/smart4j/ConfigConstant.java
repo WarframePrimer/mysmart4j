@@ -12,6 +12,7 @@ public interface ConfigConstant {
     String JDBC_USERNAME = "smart.framework.jdbc.username";
     String JDBC_PASSWORD = "smart.framework.jdbc.password";
 
+    //基础包名
     String APP_BASE_PATH = "smart.framework.app.base_path";
     String APP_JSP_PATH = "smart.framework.app.jsp_path";
     String APP_ASSET_PATH = "smart.framework.app.asset_path";
