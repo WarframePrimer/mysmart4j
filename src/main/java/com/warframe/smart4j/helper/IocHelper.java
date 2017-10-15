@@ -1,9 +1,12 @@
 package com.warframe.smart4j.helper;
 
+import com.sun.javadoc.FieldDoc;
+import com.warframe.smart4j.annotation.Inject;
+import com.warframe.smart4j.util.ArrayUtil;
 import com.warframe.smart4j.util.CollectionUtil;
+import com.warframe.smart4j.util.ReflectionUtil;
 
 import java.lang.reflect.Field;
-import java.util.Collections;
 import java.util.Map;
 
 
@@ -17,8 +20,11 @@ import java.util.Map;
  * ReflectionUtil的setField方法修改当前成员变量的值
  * <p>
  * 实现依赖注入
+ *
+ * 需要注意的是:此时在框架中管理的对象都是单例的，由于IOC框架底层还是从BeanHelper中获取BeanMap的,而BeanMap中的对象都是事先创建好并放入Bean容器中的
+ * 所以所有对象都是单例的。
  */
-public class IocHelper {
+public final class IocHelper {
 
     static {
         //获取所有的Bean类和Bean实例之间的映射关系
@@ -31,7 +37,21 @@ public class IocHelper {
                 Object beanInstance = beanEntry.getValue();
                 //获取Bean类定义的所有成员变量
                 Field[] beanFields = beanClass.getDeclaredFields();
-                //TODO
+                if (ArrayUtil.isNotEmpty(beanFields)) {
+                    //遍历beanFields
+                    for (Field beanField : beanFields) {
+                        //判断当前field是否有@inject注解
+                        if(beanField.isAnnotationPresent(Inject.class)){
+                            //在BeanMap中获取Bean Field的实例
+                            Class<?> beanFieldClass = beanField.getType();
+                            Object beanFieldInstance = BeanHelper.getBean(beanFieldClass);
+                            if(beanFieldInstance != null){
+                                //通过反射初始化field属性值
+                                ReflectionUtil.setField(beanInstance,beanField,beanFieldInstance);
+                            }
+                        }
+                    }
+                }
             }
         }
     }

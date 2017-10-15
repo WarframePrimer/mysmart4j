@@ -51,6 +51,12 @@ public final class ClassUtil {
         return cls;
     }
 
+
+    public static Class<?> loadClass(String className){
+        return loadClass(className,true);
+    }
+
+
     /**
      * 获取指定包名下的所有类
      */
@@ -69,7 +75,7 @@ public final class ClassUtil {
                         addClass(classSet, packagePath, packageName);
                     } else if ("jar".equals(protocol)) {
                         JarURLConnection jarURLConnection = (JarURLConnection) url.openConnection();
-                        url.openConnection();
+//                        url.openConnection();
                         if (jarURLConnection != null) {
                             JarFile jarFile = jarURLConnection.getJarFile();
                             if (jarFile != null) {
