@@ -2,7 +2,6 @@
 看《架构探险 从零开始写JavaWeb框架》，自己实现一个轻量级的JavaWeb框架^_^
 
 ## DispatcherServlt
-  总结：搭建了一个简单的MVC框架，
   - Controller注解来定义Controller类;
   - Inject注解来实现依赖注入;
   - Service注解来定义服务类;
