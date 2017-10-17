@@ -1,5 +1,6 @@
 package com.warframe.smart4j;
 
+import com.warframe.smart4j.bean.Data;
 import com.warframe.smart4j.bean.Handler;
 import com.warframe.smart4j.bean.Param;
 import com.warframe.smart4j.bean.View;
@@ -17,6 +18,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.lang.reflect.Method;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -35,15 +37,23 @@ import java.util.Map;
  * 核心类
  */
 
+//Servlet3.0支持使用注解，可以实现web.xml零配置
+//所有请求都经由DispatcherServlet进行处理(/*)
 @WebServlet(urlPatterns = "/*", loadOnStartup = 0)
 public class DispatcherServlet extends HttpServlet {
 
+    /**
+     * 进行初始化，很重要
+     *
+     * @param config
+     * @throws ServletException
+     */
     @Override
     public void init(ServletConfig config) throws ServletException {
         //初始化相关helper类
         HelperLoader.init();
         //获取ServletContext对象(用于注册Servlet)
-        //动态注册Servlet，只能在初始化时进行注册。在运行时为了安全原因，无法完成注册
+        //动态注册Servlet，只能在初始化时进行注册。在运行时为了安全原因，无法完成注册,还是不是很清楚
         ServletContext servletContext = config.getServletContext();
         //注册处理JSP的Servlet
         ServletRegistration jspServlet = servletContext.getServletRegistration("jsp");
@@ -67,13 +77,14 @@ public class DispatcherServlet extends HttpServlet {
             Object controller = BeanHelper.getBean(controllerClass);
             //创建请求参数对象
             Map<String, Object> paramMap = new HashMap<>();
+            //获取发送请求页面中form表单里所有具有name属性的表单对象
             Enumeration<String> paramNames = req.getParameterNames();
             while (paramNames.hasMoreElements()) {
                 String paramName = paramNames.nextElement();
                 String paramValue = req.getParameter(paramName);
                 paramMap.put(paramName, paramValue);
             }
-            //请求体body
+            //url后面的参数
             String body = CodecUtil.decodeURL(StreamUtil.getString(req.getInputStream()));
             if (StringUtil.isNotEmpty(body)) {
                 String[] params = StringUtil.splitString(body, "&");
@@ -103,16 +114,28 @@ public class DispatcherServlet extends HttpServlet {
                     if (path.startsWith("/")) {
                         resp.sendRedirect(req.getContextPath() + path);
                     } else {
-                        //path没有以/开头
+                        //path没有以/开头,就表示跳转到一个jsp页面,并附上相关数据model
                         Map<String, Object> model = view.getModel();
                         for (Map.Entry<String, Object> entry : model.entrySet()) {
-                            req.setAttribute(entry.getKey(),entry.getValue());
+                            req.setAttribute(entry.getKey(), entry.getValue());
                         }
-                        req.getRequestDispatcher(ConfigHelper.getAppJspPath()+path);
-                        //TODO
+                        req.getRequestDispatcher(ConfigHelper.getAppJspPath() + path).forward(req, resp);
                     }
                 }
-
+            } else if (result instanceof Data) {
+                //返回JSON数据
+                Data data = (Data) result;
+                Object model = data.getModel();
+                if (null != model) {
+                    resp.setContentType("application/json");
+                    resp.setCharacterEncoding("UTF-8");
+                    PrintWriter writer = resp.getWriter();
+                    String json = JsonUtil.toJson(model);
+                    //直接将json数据通过流的形式传到浏览器(或前端)
+                    writer.write(json);
+                    writer.flush();
+                    writer.close();
+                }
             }
         }
     }
