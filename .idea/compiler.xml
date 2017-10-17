@@ -10,9 +10,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="demosmart4j" target="1.5" />
       <module name="smart4jframework" target="1.8" />
-      <module name="testDemo" target="1.5" />
     </bytecodeTargetLevel>
   </component>
 </project>
