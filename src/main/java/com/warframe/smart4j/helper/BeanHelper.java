@@ -44,6 +44,7 @@ public final class BeanHelper {
         return (T) BEAN_MAP.get(cls);
     }
 
+    //TODO setBean
 
 
 }
