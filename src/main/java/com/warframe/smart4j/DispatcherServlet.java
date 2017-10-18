@@ -35,6 +35,9 @@ import java.util.Map;
  * 随后可以从HttpServletRequest对象中获取所有请求参数，并将其初始化到一个Param的对象中。
  * <p>
  * 核心类
+ *
+ *
+ * 实现一个简单的mvc框架
  */
 
 //Servlet3.0支持使用注解，可以实现web.xml零配置
