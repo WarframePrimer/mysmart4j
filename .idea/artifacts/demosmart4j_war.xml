@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="war" name="demosmart4j:war">
-    <output-path>$PROJECT_DIR$/../demosmart4j/target</output-path>
-    <root id="archive" name="demosmart4j.war">
-      <element id="artifact" artifact-name="demosmart4j:war exploded" />
-    </root>
-  </artifact>
-</component>
