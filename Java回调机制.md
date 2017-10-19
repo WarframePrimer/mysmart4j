@@ -7,55 +7,55 @@
 - b再调用A的方法
 
 - - - 
-public class A {
-    private List<String> wordList = loadList();
+ public class A {
+     private List<String> wordList = loadList();
 
-    public <T> T execute(CallBackInterface callBackInterface){
-        //可以先执行一些execute的逻辑
-        //直接将相关的操作权交给callBackInterface
-        T result = (T) callBackInterface.process(wordList);
-        return result;
-    }
-
-
-    public List<String> loadList() {
-        List<String> wordList = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            wordList.add(Integer.toString(i));
-        }
-        return wordList;
-    }
-
-}
+     public <T> T execute(CallBackInterface callBackInterface){
+         //可以先执行一些execute的逻辑
+         //直接将相关的操作权交给callBackInterface
+         T result = (T) callBackInterface.process(wordList);
+         return result;
+     }
 
 
-public interface CallBackInterface <T>{
+     public List<String> loadList() {
+         List<String> wordList = new ArrayList<>();
+         for (int i = 0; i < 10; i++) {
+             wordList.add(Integer.toString(i));
+         }
+         return wordList;
+     }
 
-    T process(List<Object> param);
-}
+ }
 
-public class Test {
-    public static void main(String[] args){
-        A a = new A();
 
-        a.execute(new CallBackInterface() {
-            @Override
-            public Object process(List param) {
-                List<String> wordList = param;
-                wordList.remove("1");
-                return true;
-            }
-        });
+ public interface CallBackInterface <T>{
 
-        a.execute(new CallBackInterface() {
-            @Override
-            public Object process(List param) {
-                List<String> wordList = param;
-                wordList.add("24");
-                return true;
-            }
-        });
+     T process(List<Object> param);
+ }
 
-    }
-}
+ public class Test {
+     public static void main(String[] args){
+         A a = new A();
+
+         a.execute(new CallBackInterface() {
+             @Override
+             public Object process(List param) {
+                 List<String> wordList = param;
+                 wordList.remove("1");
+                 return true;
+             }
+         });
+
+         a.execute(new CallBackInterface() {
+             @Override
+             public Object process(List param) {
+                 List<String> wordList = param;
+                 wordList.add("24");
+                 return true;
+             }
+         });
+
+     }
+ }
 - - -
