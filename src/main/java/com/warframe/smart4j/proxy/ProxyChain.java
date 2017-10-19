@@ -60,10 +60,14 @@ public class ProxyChain {
     //在该方法中，通过proxyIndex来充当对象的计数器，若未达到proxyList的上限，则取出对应的Proxy对象，并调用其doProxy方法
     //在Proxy接口的实现中会提供相应的横切逻辑，并调用doProxyChain方法，随后将再次调用当前ProxyChain对象的doProxyChain方法
     //知道proxyIndex达到proxyList的上限，最后调用methodProxy的invokeSuper方法，执行目标对象的业务逻辑。
+
+    //这里使用了回调机制(callback)在ProxyChain中的doProxyChain中执行了Proxy的doProxy方法，然后doProxy方法中有会调用ProxyChain的doProxyChain方法
+    //ProxyChain中会有Proxy的引用,在这里就是proxyList
     public Object doProxyChain() throws Throwable {
         Object methodResult;
 
         if (proxyIndex < proxyList.size()) {
+            //算是回调吗(CallBack)
             methodResult = proxyList.get(proxyIndex++).doProxy(this);
         } else {
             methodResult = methodProxy.invokeSuper(targetObject,methodParams);

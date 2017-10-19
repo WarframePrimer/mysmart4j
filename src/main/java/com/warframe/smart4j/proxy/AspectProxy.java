@@ -10,12 +10,11 @@ import java.lang.reflect.Method;
  * @Date 2017/10/18 20:30
  * <p>
  * 切面代理
+ * 抽象类
  */
 public abstract class AspectProxy implements Proxy {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AspectProxy.class);
-
-
 
     //实现Proxy接口提供的doProxy方法
     @Override

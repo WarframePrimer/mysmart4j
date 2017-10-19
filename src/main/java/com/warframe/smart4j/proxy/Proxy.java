@@ -5,6 +5,8 @@ package com.warframe.smart4j.proxy;
  * @Date 2017/10/18 17:00
  *
  * 代理接口
+ *
+ * 接口实现类实现doProxy方法并且执行proxyChain#doProxyChain方法
  */
 public interface Proxy {
 
