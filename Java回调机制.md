@@ -7,6 +7,7 @@
 - b再调用A的方法
 
 - - - 
+
  public class A {
      private List<String> wordList = loadList();
 
@@ -27,13 +28,16 @@
      }
 
  }
+ 
+- - - 
 
-
+- - -
  public interface CallBackInterface <T>{
 
      T process(List<Object> param);
  }
-
+- - -
+- - - 
  public class Test {
      public static void main(String[] args){
          A a = new A();
@@ -58,4 +62,5 @@
 
      }
  }
+ 
 - - -
