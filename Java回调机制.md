@@ -6,7 +6,7 @@
 - A的对象a调用b的方法f
 - b再调用A的方法
 
-- - - 
+``` java
 
  public class A {
      private List<String> wordList = loadList();
@@ -57,4 +57,4 @@
      }
  }
  
-- - -
+```
