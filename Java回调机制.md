@@ -28,16 +28,10 @@
      }
 
  }
- 
-- - - 
-
-- - -
  public interface CallBackInterface <T>{
 
      T process(List<Object> param);
- }
-- - -
-- - - 
+ } 
  public class Test {
      public static void main(String[] args){
          A a = new A();
