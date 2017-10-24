@@ -1,5 +1,12 @@
 # mysmart4j
 看《架构探险 从零开始写JavaWeb框架》，自己实现一个轻量级的JavaWeb框架^_^
+# mysmart4j流程
+- ConfigHelper 读取smart.properties配置(包括数据库记载驱动、数据库连接、用户名、密码、应用包名、jsp文件路径、静态资源路径);
+- ClassHelper 加载应用包名下的所有类，并放入CLASS_SET中(Set<Class<?>> CLASS_SET);
+- BeanHelper 获取mysmart4j框架管理的Bean(Controller,Service以及之后的代理类等)(Map<Class<?>,Object> BEAN_MAP(beanClass,beanInstance));
+- AopHelper 获取目标类(委托类)和代理对象(targetClass,Proxy)之后放入BEAN_MAP中进行管理
+- IocHelper 获取BEAN_MAP后，对于类中属性带有注解@Inject的进行依赖注入
+- ControllerHelper 建立一个ACTION_MAP(Request,Handler)关于请求和处理的映射关系,实现MVC的过程(SpringMVC)
 
 ## DispatcherServlt
 - @Controller注解来定义Controller类;
@@ -19,13 +26,7 @@
 ## AOP
 ![img text](https://raw.githubusercontent.com/WarframePrimer/mysmart4j/master/img/AOP.jpg)
 
-## mysmart4j流程
-- ConfigHelper 读取smart.properties配置(包括数据库记载驱动、数据库连接、用户名、密码、应用包名、jsp文件路径、静态资源路径);
-- ClassHelper 加载应用包名下的所有类，并放入CLASS_SET中(Set<Class<?>> CLASS_SET);
-- BeanHelper 获取mysmart4j框架管理的Bean(Controller,Service以及之后的代理类等)(Map<Class<?>,Object> BEAN_MAP(beanClass,beanInstance));
-- AopHelper 获取目标类(委托类)和代理对象(targetClass,Proxy)之后放入BEAN_MAP中进行管理
-- IocHelper 获取BEAN_MAP后，对于类中属性带有注解@Inject的进行依赖注入
-- ControllerHelper 建立一个ACTION_MAP(Request,Handler)关于请求和处理的映射关系,实现MVC的过程(SpringMVC)
+
 
 
   
