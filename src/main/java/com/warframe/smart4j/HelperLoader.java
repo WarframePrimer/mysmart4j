@@ -1,9 +1,6 @@
 package com.warframe.smart4j;
 
-import com.warframe.smart4j.helper.BeanHelper;
-import com.warframe.smart4j.helper.ClassHelper;
-import com.warframe.smart4j.helper.ControllerHelper;
-import com.warframe.smart4j.helper.IocHelper;
+import com.warframe.smart4j.helper.*;
 import com.warframe.smart4j.util.ClassUtil;
 
 /**
@@ -18,7 +15,8 @@ import com.warframe.smart4j.util.ClassUtil;
 public class HelperLoader {
 
     public static void init() {
-        Class<?>[] classList = {ClassHelper.class, BeanHelper.class, IocHelper.class, ControllerHelper.class};
+        //AopHelper需要放在IocHelper之前进行加载，因为首先需要通过AopHelper获取代理对象，然后才能通过IocHelper进行依赖注入
+        Class<?>[] classList = {ClassHelper.class, BeanHelper.class, AopHelper.class, IocHelper.class, ControllerHelper.class};
 
         for (Class<?> cls : classList) {
             ClassUtil.loadClass(cls.getName());

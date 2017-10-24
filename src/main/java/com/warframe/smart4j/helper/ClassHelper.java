@@ -74,14 +74,19 @@ public final class ClassHelper {
         beanClassSet.addAll(getControllerClassSet());
         return beanClassSet;
     }
-
+    /*===========================================================*/
+    /* 因为需要扩展AspectProxy抽象类的所有具体类;此外,还需要获取带有Aspect注解的所有类
+    * 所以需要ClassHelper中添加以下两个方法
+    * */
 
     /**
      * 获取应用包名下某父类(或接口)的所有子类(或实现类)
+     * 用来获取所有实现了AspectProxy的具体类
      */
     public static Set<Class<?>> getClassSetBySuper(Class<?> superClass) {
         Set<Class<?>> classSet = new HashSet<>();
         for (Class<?> cls : CLASS_SET) {
+            /*class1.isAssignableFrom(class2)判定class1是否和class2相同或者是class2的父类或父接口，如果是，return true*/
             if (superClass.isAssignableFrom(cls) && !superClass.equals(cls)) {
                 classSet.add(cls);
             }
