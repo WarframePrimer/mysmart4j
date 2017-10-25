@@ -1,9 +1,11 @@
 package com.warframe.smart4j.helper;
 
 import com.warframe.smart4j.annotation.Aspect;
+import com.warframe.smart4j.annotation.Service;
 import com.warframe.smart4j.proxy.AspectProxy;
 import com.warframe.smart4j.proxy.Proxy;
 import com.warframe.smart4j.proxy.ProxyManager;
+import com.warframe.smart4j.proxy.TransactionProxy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -72,11 +74,20 @@ public final class AopHelper {
      * 一个代理类可以对应一个或多个目标类
      * 这里的代理类指定是切面类
      *
+     * 更改，增加了事务代理，代理映射中不仅包括普通的切面代理，还增加了事务代理，
+     * 所以createProxyMap需要添加两种不同的代理映射
+     *
      * @return
      * @throws Exception
      */
     private static Map<Class<?>, Set<Class<?>>> createProxyMap() throws Exception {
         Map<Class<?>, Set<Class<?>>> proxyMap = new HashMap<>();
+        addAspectProxy(proxyMap);
+        addTransactionProxy(proxyMap);
+        return proxyMap;
+    }
+
+    private static void addAspectProxy(Map<Class<?>,Set<Class<?>>> proxyMap) throws Exception{
         Set<Class<?>> proxyClassSet = ClassHelper.getClassSetBySuper(AspectProxy.class);
         //获取到所有的代理类(实现了AspectProxy的具体子类)
         for (Class<?> proxyClass : proxyClassSet) {
@@ -86,8 +97,13 @@ public final class AopHelper {
                 proxyMap.put(proxyClass, targetClassSet);
             }
         }
-        return proxyMap;
     }
+
+    private static void addTransactionProxy(Map<Class<?>,Set<Class<?>>> proxyMap){
+        Set<Class<?>> serviceClassSet = ClassHelper.getClassSetByAnnotation(Service.class);
+        proxyMap.put(TransactionProxy.class,serviceClassSet);
+    }
+
 
     /**
      * 代理类需要扩展AspectProxy抽象类，还需要带有Aspect注解，只有满足上述两个条件

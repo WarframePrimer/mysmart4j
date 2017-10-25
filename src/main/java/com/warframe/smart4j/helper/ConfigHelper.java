@@ -25,7 +25,7 @@ public final class ConfigHelper {
     /**
      * 获取JDBC URL
      */
-    public static String getJdbcUrk() {
+    public static String getJdbcUrl() {
         return PropsUtil.getString(CONFIG_PROPS, ConfigConstant.JDBC_URL);
     }
 
