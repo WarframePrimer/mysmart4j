@@ -67,4 +67,21 @@
  |REPEATABLE_READ|禁止|禁止|允许|
  |SERIALIZABLE|禁止|禁止|禁止|
  
+ -----------
+ 
+ ### Spring的事务传播行为(Transaction Propagation Behavior)  
+ Spring一共提供了7种事务传播行为(假设事务从方法A传播到方法B，方法A有事务吗?)
+ - PROPAGATION_REQUIRED;——————如果没有，新建一个事务;如果有，就加入当前事务(默认)
+ - PROPAGATION_REQUIRED_NEW;——————如果没有，新建一个事务;如果有，将当前事务挂起
+ - PROPAGATION_NESTED;——————如果没有，新建一个事务;如果有，在当前事务中嵌套其他事务
+ - PROPAGATION_SUPPORTS;——————如果没有，以非事务方式执行;如果有，就使用当前事务
+ - PROPAGATION_NOT_SUPPORTED;——————如果没有，以非事务方式执行;如果有，将当前事务挂起
+ - PROPAGATION_NEVER;——————如果没有。以非事务方式执行;如果有，就抛出异常
+ - PROPAGATION_MANDATORY.——————如果没有，就抛出异常;如果有，就使用当前事务
+ 
+ 
+ 
+ 
+ 
+ 
 
