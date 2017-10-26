@@ -68,21 +68,24 @@ public class DispatcherServlet extends HttpServlet {
 
     @Override
     protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        //获取请求方法和路径
-        String requestMethod = req.getMethod().toLowerCase();
-        String requestPath = req.getPathInfo();
+        //初始化
+        ServletHelper.init(req, resp);
+        try {
+            //获取请求方法和路径
+            String requestMethod = req.getMethod().toLowerCase();
+            String requestPath = req.getPathInfo();
 
-        //首先对于/favicon.ico的请求，不需要进行创建参数(静态资源)
-        if (requestPath.equals("/favicon.ico")) {
-            return;
-        }
+            //首先对于/favicon.ico的请求，不需要进行创建参数(静态资源)
+            if (requestPath.equals("/favicon.ico")) {
+                return;
+            }
 
-        //处理Action处理器
-        Handler handler = ControllerHelper.getHandler(requestMethod, requestPath);
-        if (handler != null) {
-            //获取Controller类及其实例
-            Class<?> controllerClass = handler.getControllerClass();
-            Object controller = BeanHelper.getBean(controllerClass);
+            //处理Action处理器
+            Handler handler = ControllerHelper.getHandler(requestMethod, requestPath);
+            if (handler != null) {
+                //获取Controller类及其实例
+                Class<?> controllerClass = handler.getControllerClass();
+                Object controller = BeanHelper.getBean(controllerClass);
 
 //            //创建请求参数对象
 //            Map<String, Object> paramMap = new HashMap<>();
@@ -113,67 +116,71 @@ public class DispatcherServlet extends HttpServlet {
 //            }
 
 //            Param param = new Param(paramMap);
-            /**
-             *因为对Param进行了重新设计，去除了原来的paramMap(只保存键值对的思路)
-             *
-             *
-             */
-            /**
-             * 创建参数对象 Param
-             */
-            Param param;
-            if (UploadHelper.isMultipart(req)) {
-                param = UploadHelper.createParam(req);
-            } else {
-                param = RequestHelper.createParam(req);
-            }
+                /**
+                 *因为对Param进行了重新设计，去除了原来的paramMap(只保存键值对的思路)
+                 *
+                 *
+                 */
+                /**
+                 * 创建参数对象 Param
+                 */
+                Param param;
+                if (UploadHelper.isMultipart(req)) {
+                    param = UploadHelper.createParam(req);
+                } else {
+                    param = RequestHelper.createParam(req);
+                }
 
 
-            //调用Action方法
-            Method actionMethod = handler.getActionMethod();
-            Object result;
+                //调用Action方法
+                Method actionMethod = handler.getActionMethod();
+                Object result;
             /* 优化action参数
              * 对于有些action方法来说，根本就不需要param参数
               * */
-            if (param.isEmpty()) {
-                result = ReflectionUtil.invokeMethod(controller, actionMethod);
-            } else {
-                result = ReflectionUtil.invokeMethod(controller, actionMethod, param);
-            }
-            //处理Action方法返回值
-            if (result instanceof View) {
-                //返回JSP页面
-                View view = (View) result;
-                String path = view.getPath();
-                if (StringUtil.isNotEmpty(path)) {
-                    //如果path以/开头，表示重定向
-                    if (path.startsWith("/")) {
-                        resp.sendRedirect(req.getContextPath() + path);
-                    } else {
-                        //path没有以/开头,就表示跳转到一个jsp页面,并附上相关数据model
-                        Map<String, Object> model = view.getModel();
-                        for (Map.Entry<String, Object> entry : model.entrySet()) {
-                            req.setAttribute(entry.getKey(), entry.getValue());
+                if (param.isEmpty()) {
+                    result = ReflectionUtil.invokeMethod(controller, actionMethod);
+                } else {
+                    result = ReflectionUtil.invokeMethod(controller, actionMethod, param);
+                }
+                //处理Action方法返回值
+                if (result instanceof View) {
+                    //返回JSP页面
+                    View view = (View) result;
+                    String path = view.getPath();
+                    if (StringUtil.isNotEmpty(path)) {
+                        //如果path以/开头，表示重定向
+                        if (path.startsWith("/")) {
+                            resp.sendRedirect(req.getContextPath() + path);
+                        } else {
+                            //path没有以/开头,就表示跳转到一个jsp页面,并附上相关数据model
+                            Map<String, Object> model = view.getModel();
+                            for (Map.Entry<String, Object> entry : model.entrySet()) {
+                                req.setAttribute(entry.getKey(), entry.getValue());
+                            }
+                            req.getRequestDispatcher(ConfigHelper.getAppJspPath() + path).forward(req, resp);
                         }
-                        req.getRequestDispatcher(ConfigHelper.getAppJspPath() + path).forward(req, resp);
+                    }
+                } else if (result instanceof Data) {
+                    //返回JSON数据
+                    Data data = (Data) result;
+                    Object model = data.getModel();
+                    if (null != model) {
+                        resp.setContentType("application/json");
+                        resp.setCharacterEncoding("UTF-8");
+                        PrintWriter writer = resp.getWriter();
+                        String json = JsonUtil.toJson(model);
+                        //直接将json数据通过流的形式传到浏览器(或前端)
+                        writer.write(json);
+                        writer.flush();
+                        writer.close();
                     }
                 }
-            } else if (result instanceof Data) {
-                //返回JSON数据
-                Data data = (Data) result;
-                Object model = data.getModel();
-                if (null != model) {
-                    resp.setContentType("application/json");
-                    resp.setCharacterEncoding("UTF-8");
-                    PrintWriter writer = resp.getWriter();
-                    String json = JsonUtil.toJson(model);
-                    //直接将json数据通过流的形式传到浏览器(或前端)
-                    writer.write(json);
-                    writer.flush();
-                    writer.close();
-                }
             }
+        }finally {
+            ServletHelper.destroy();
         }
+
     }
 
 }
