@@ -72,6 +72,7 @@ public class Param {
                 String fieldName = formParam.getFieldName();
                 Object fieldValue = formParam.getFieldValue();
                 if (fieldMap.containsKey(fieldName)) {
+                    //如果，一个fieldName有多个fieldValue,不进行覆盖，而是在原来的基础上在添加后面的值
                     fieldValue = fieldMap.get(fieldName) + StringUtil.SEPARATOR + fieldValue;
                 }
                 fieldMap.put(fieldName, fieldValue);
@@ -124,43 +125,43 @@ public class Param {
      * 验证参数是否为空
      */
     public boolean isEmpty() {
-        //TODO
-        return true;
+        //验证
+        return CollectionUtil.isEmpty(formParamList) && CollectionUtil.isEmpty(fileParamList);
     }
 
 
     /**
      * 根据参数名获取String参数值
      */
-    public String getString(String fieldName){
+    public String getString(String fieldName) {
         return CastUtil.castString(getFieldMap().get(fieldName));
     }
 
     /**
      * 根据参数名获取double参数值
      */
-    public double getDouble(String fieldName){
+    public double getDouble(String fieldName) {
         return CastUtil.castDouble(getFieldMap().get(fieldName));
     }
 
     /**
      * 根据参数名获取long参数值
      */
-    public long getLong(String fieldName){
+    public long getLong(String fieldName) {
         return CastUtil.castLong(getFieldMap().get(fieldName));
     }
 
     /**
      * 根据参数名获取int参数值
      */
-    public int getInt(String fieldName){
+    public int getInt(String fieldName) {
         return CastUtil.castInt(getFieldMap().get(fieldName));
     }
 
     /**
      * 根据参数名获取boolean参数值
      */
-    public boolean getBoolean(String fieldName){
+    public boolean getBoolean(String fieldName) {
         return CastUtil.castBoolean(getFieldMap().get(fieldName));
     }
 }

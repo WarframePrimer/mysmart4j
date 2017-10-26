@@ -1,12 +1,7 @@
 package com.warframe.smart4j;
 
-import com.warframe.smart4j.bean.Data;
-import com.warframe.smart4j.bean.Handler;
-import com.warframe.smart4j.bean.Param;
-import com.warframe.smart4j.bean.View;
-import com.warframe.smart4j.helper.BeanHelper;
-import com.warframe.smart4j.helper.ConfigHelper;
-import com.warframe.smart4j.helper.ControllerHelper;
+import com.warframe.smart4j.bean.*;
+import com.warframe.smart4j.helper.*;
 import com.warframe.smart4j.util.*;
 
 import javax.servlet.ServletConfig;
@@ -20,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -35,8 +31,8 @@ import java.util.Map;
  * 随后可以从HttpServletRequest对象中获取所有请求参数，并将其初始化到一个Param的对象中。
  * <p>
  * 核心类
- *
- *
+ * <p>
+ * <p>
  * 实现一个简单的mvc框架
  */
 
@@ -65,6 +61,9 @@ public class DispatcherServlet extends HttpServlet {
         ServletRegistration defaultServlet = servletContext.getServletRegistration("default");
         defaultServlet.addMapping(ConfigHelper.getAppAssetPath() + "*");
 
+        UploadHelper.init(servletContext);
+
+
     }
 
     @Override
@@ -72,40 +71,63 @@ public class DispatcherServlet extends HttpServlet {
         //获取请求方法和路径
         String requestMethod = req.getMethod().toLowerCase();
         String requestPath = req.getPathInfo();
+
+        //首先对于/favicon.ico的请求，不需要进行创建参数(静态资源)
+        if (requestPath.equals("/favicon.ico")) {
+            return;
+        }
+
         //处理Action处理器
         Handler handler = ControllerHelper.getHandler(requestMethod, requestPath);
         if (handler != null) {
             //获取Controller类及其实例
             Class<?> controllerClass = handler.getControllerClass();
             Object controller = BeanHelper.getBean(controllerClass);
-            //创建请求参数对象
-            Map<String, Object> paramMap = new HashMap<>();
-            //获取发送请求页面中form表单里所有具有name属性的表单对象
-            Enumeration<String> paramNames = req.getParameterNames();
-            while (paramNames.hasMoreElements()) {
-                String paramName = paramNames.nextElement();
-                String paramValue = req.getParameter(paramName);
-                paramMap.put(paramName, paramValue);
-            }
+
+//            //创建请求参数对象
+//            Map<String, Object> paramMap = new HashMap<>();
+//            //获取发送请求页面中form表单里所有具有name属性的表单对象
+//            Enumeration<String> paramNames = req.getParameterNames();
+//            while (paramNames.hasMoreElements()) {
+//                String paramName = paramNames.nextElement();
+//                String paramValue = req.getParameter(paramName);
+//                paramMap.put(paramName, paramValue);
+//            }
+//            /**
+//             * 疑问，网上有人说request.getParameter和request.getInputStream不能同时使用
+//             */
+//            //url后面的参数
+//            String body = CodecUtil.decodeURL(StreamUtil.getString(req.getInputStream()));
+//            if (StringUtil.isNotEmpty(body)) {
+//                String[] params = StringUtil.splitString(body, "&");
+//                if (ArrayUtil.isNotEmpty(params)) {
+//                    for (String param : params) {
+//                        String[] array = StringUtil.splitString(param, "=");
+//                        if (ArrayUtil.isNotEmpty(array) && array.length == 2) {
+//                            String paramName = array[0];
+//                            String paramValue = array[1];
+//                            paramMap.put(paramName, paramValue);
+//                        }
+//                    }
+//                }
+//            }
+
+//            Param param = new Param(paramMap);
             /**
-             * 疑问，网上有人说request.getParameter和request.getInputStream不能同时使用
+             *因为对Param进行了重新设计，去除了原来的paramMap(只保存键值对的思路)
+             *
+             *
              */
-            //url后面的参数
-            String body = CodecUtil.decodeURL(StreamUtil.getString(req.getInputStream()));
-            if (StringUtil.isNotEmpty(body)) {
-                String[] params = StringUtil.splitString(body, "&");
-                if (ArrayUtil.isNotEmpty(params)) {
-                    for (String param : params) {
-                        String[] array = StringUtil.splitString(param, "=");
-                        if (ArrayUtil.isNotEmpty(array) && array.length == 2) {
-                            String paramName = array[0];
-                            String paramValue = array[1];
-                            paramMap.put(paramName, paramValue);
-                        }
-                    }
-                }
+            /**
+             * 创建参数对象 Param
+             */
+            Param param;
+            if (UploadHelper.isMultipart(req)) {
+                param = UploadHelper.createParam(req);
+            } else {
+                param = RequestHelper.createParam(req);
             }
-            Param param = new Param(paramMap);
+
 
             //调用Action方法
             Method actionMethod = handler.getActionMethod();
@@ -113,10 +135,10 @@ public class DispatcherServlet extends HttpServlet {
             /* 优化action参数
              * 对于有些action方法来说，根本就不需要param参数
               * */
-            if(param.isEmpty()){
+            if (param.isEmpty()) {
                 result = ReflectionUtil.invokeMethod(controller, actionMethod);
-            }else{
-                result = ReflectionUtil.invokeMethod(controller,actionMethod,param);
+            } else {
+                result = ReflectionUtil.invokeMethod(controller, actionMethod, param);
             }
             //处理Action方法返回值
             if (result instanceof View) {

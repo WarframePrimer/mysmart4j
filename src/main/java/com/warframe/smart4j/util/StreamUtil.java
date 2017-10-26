@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 
 /**
  * @Author warframe[github.com/WarframePrimer]
@@ -29,11 +30,37 @@ public final class StreamUtil {
                 sb.append(line);
             }
         } catch (Exception e) {
-            LOGGER.error("get String failure",e);
+            LOGGER.error("get String failure", e);
             throw new RuntimeException(e);
         }
 
         return sb.toString();
+    }
+
+
+    /**
+     * 将输入流复制到输出流
+     * 就是简单的读写操作
+     */
+    public static void copyStream(InputStream inputStream, OutputStream outputStream) {
+        try {
+            int length;
+            byte[] buffer = new byte[4 * 1024];
+            while ((length = inputStream.read(buffer, 0, buffer.length)) != -1) {
+                outputStream.write(buffer,0,length);
+            }
+            outputStream.flush();
+        } catch (Exception e) {
+            LOGGER.error("copy stream failure",e);
+            throw new RuntimeException(e);
+        }finally {
+            try {
+                inputStream.close();
+                outputStream.close();
+            }catch (Exception e){
+                LOGGER.error("close stream failure",e);
+            }
+        }
     }
 
 }

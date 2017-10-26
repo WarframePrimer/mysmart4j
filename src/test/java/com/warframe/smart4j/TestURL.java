@@ -13,10 +13,12 @@ import java.util.Set;
 public class TestURL {
 
     public static void main(String[] args) {
-        Set<Class<?>> classSet = ClassUtil.getClassSet("com.warframe.smart4j");
+//        Set<Class<?>> classSet = ClassUtil.getClassSet("com.warframe.smart4j");
+//
+//        for(Class cls:classSet){
+//            System.out.println(cls.getName());
+//        }
 
-        for(Class cls:classSet){
-            System.out.println(cls.getName());
-        }
+        System.out.println((char)19);
     }
 }
