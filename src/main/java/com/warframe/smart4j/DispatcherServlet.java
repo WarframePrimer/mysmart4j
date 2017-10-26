@@ -87,6 +87,9 @@ public class DispatcherServlet extends HttpServlet {
                 String paramValue = req.getParameter(paramName);
                 paramMap.put(paramName, paramValue);
             }
+            /**
+             * 疑问，网上有人说request.getParameter和request.getInputStream不能同时使用
+             */
             //url后面的参数
             String body = CodecUtil.decodeURL(StreamUtil.getString(req.getInputStream()));
             if (StringUtil.isNotEmpty(body)) {
@@ -106,7 +109,15 @@ public class DispatcherServlet extends HttpServlet {
 
             //调用Action方法
             Method actionMethod = handler.getActionMethod();
-            Object result = ReflectionUtil.invokeMethod(controller, actionMethod, param);
+            Object result;
+            /* 优化action参数
+             * 对于有些action方法来说，根本就不需要param参数
+              * */
+            if(param.isEmpty()){
+                result = ReflectionUtil.invokeMethod(controller, actionMethod);
+            }else{
+                result = ReflectionUtil.invokeMethod(controller,actionMethod,param);
+            }
             //处理Action方法返回值
             if (result instanceof View) {
                 //返回JSP页面
