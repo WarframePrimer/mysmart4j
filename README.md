@@ -22,7 +22,7 @@
 - JDK动态代理生成的代理类和委托类实现了相同的接口;
 - CGLib动态代理中生成的字节码更加复杂，生成的代理类是委托类的子类，且不能处理被final关键字修饰的方法;
 - JDK采用反射机制调用委托类的方法，CGLib采用类似索引的方式直接调用委托类方法;
-###补充关于smart4j框架中链式代理：[ProxyChain](http://blog.csdn.net/maikelsong/article/details/50267495)
+### 补充关于smart4j框架中链式代理：[ProxyChain](http://blog.csdn.net/maikelsong/article/details/50267495)
 
 ## AOP
 ![img text](https://raw.githubusercontent.com/WarframePrimer/mysmart4j/master/img/AOP.jpg)
