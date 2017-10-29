@@ -72,6 +72,7 @@ public final class ClassUtil {
                     if ("file".equals(protocol)) {
 
                         String packagePath = url.getPath().replaceAll("%20", " ");
+                        //如果类型为file
                         addClass(classSet, packagePath, packageName);
                     } else if ("jar".equals(protocol)) {
                         JarURLConnection jarURLConnection = (JarURLConnection) url.openConnection();
@@ -106,13 +107,10 @@ public final class ClassUtil {
 
 
     private static void addClass(Set<Class<?>> classSet, String packagePath, String packageName) {
-        File[] files = new File(packagePath).listFiles(new FileFilter() {
-            @Override
-            public boolean accept(File file) {
-                //查找并提取符合条件的File(包括文件对象，路径对象，目录对象)
-                //这里具体的判断条件是1.以.class结尾的文件2.目录
-                return ((file.isFile() && file.getName().endsWith(".class")) || file.isDirectory());
-            }
+        File[] files = new File(packagePath).listFiles(file -> {
+            //查找并提取符合条件的File(包括文件对象，路径对象，目录对象)
+            //这里具体的判断条件是1.以.class结尾的文件2.目录
+            return ((file.isFile() && file.getName().endsWith(".class")) || file.isDirectory());
         });
         for (File file : files) {
             String fileName = file.getName();

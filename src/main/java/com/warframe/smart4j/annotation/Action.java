@@ -14,7 +14,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Action {
 
-    /**
+     /**
      * 请求类型和路径
      */
     String value();

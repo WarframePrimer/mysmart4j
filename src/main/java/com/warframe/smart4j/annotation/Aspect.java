@@ -16,6 +16,7 @@ public @interface Aspect {
     /**
      * 注解
      * 用来定义Controller这类注解
+     * value 中的值应该继承自Annotation类
      */
     Class<? extends Annotation> value();
 

@@ -38,7 +38,9 @@ public final class AopHelper {
             for (Map.Entry<Class<?>, List<Proxy>> entry : targetMap.entrySet()) {
                 Class<?> targetClass = entry.getKey();
                 List<Proxy> proxyList = entry.getValue();
+                //最后得到一个所有代理整合在一起(代理顺序按照添加到proxyList中的顺序)的代理类
                 Object proxy = ProxyManager.createProxy(targetClass, proxyList);
+                //最后，将委托类(目标类)类名和代理类对象构成映射添加到BEAN_MAP中交给框架管理(单例)
                 BeanHelper.setBean(targetClass, proxy);
             }
 
@@ -64,6 +66,7 @@ public final class AopHelper {
         Class<? extends Annotation> annotation = aspect.value();
 
         if (annotation != null && !annotation.equals(Aspect.class)) {
+            //这里带有注解交给框架处理的目标类无非就只有@Controller,@Service两种
             targetClassSet.addAll(ClassHelper.getClassSetByAnnotation(annotation));
         }
 
@@ -88,10 +91,12 @@ public final class AopHelper {
     }
 
     private static void addAspectProxy(Map<Class<?>,Set<Class<?>>> proxyMap) throws Exception{
+        //代理类是根据是否继承AspectProxy来作为判断依据的
         Set<Class<?>> proxyClassSet = ClassHelper.getClassSetBySuper(AspectProxy.class);
         //获取到所有的代理类(实现了AspectProxy的具体子类)
         for (Class<?> proxyClass : proxyClassSet) {
             if (proxyClass.isAnnotationPresent(Aspect.class)) {
+                //获得相应代理类的注解类及注解类中的相关配置(如果有的话)
                 Aspect aspect = proxyClass.getAnnotation(Aspect.class);
                 Set<Class<?>> targetClassSet = createTargetClassSet(aspect);
                 proxyMap.put(proxyClass, targetClassSet);

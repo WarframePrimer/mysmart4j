@@ -22,6 +22,7 @@ public final class BeanHelper {
         Set<Class<?>> beanClassSet = ClassHelper.getBeanClassSet();
         for (Class beanClass : beanClassSet) {
             Object obj = ReflectionUtil.newInstance(beanClass);
+            //如果有代理类代理了Controller注解的类，那么之前BEAN_MAP中这个类的实例会覆盖成新的代理对象实例
             BEAN_MAP.put(beanClass, obj);
         }
     }
