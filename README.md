@@ -1,6 +1,7 @@
 # mysmart4j
 看《架构探险 从零开始写JavaWeb框架》，自己实现一个轻量级的JavaWeb框架^_^
 # mysmart4j流程
+- 加载框架配置-->扫描包名下的所有类-->初始化框架管理Bean的容器-->扫描事务代理和切面代理并更新容器-->扫描所有Bean实现依赖注入并更新容器-->对@Controller的类提取出请求-处理映射关系并放入Action_Map中初始化;
 - ConfigHelper 读取smart.properties配置(包括数据库记载驱动、数据库连接、用户名、密码、应用包名、jsp文件路径、静态资源路径);
 - ClassHelper 加载应用包名下的所有类，并放入CLASS_SET中(Set<Class<?>> CLASS_SET);
 - BeanHelper 获取mysmart4j框架管理的Bean(Controller,Service以及之后的代理类等)(Map<Class<?>,Object> BEAN_MAP(beanClass,beanInstance));
