@@ -69,6 +69,7 @@ public final class ClassHelper {
      * 获取应用包名下的所有bean类
      */
     public static Set<Class<?>> getBeanClassSet() {
+        //思考，框架需要管理的Bean应该有哪些??
         Set<Class<?>> beanClassSet = new HashSet<>();
         beanClassSet.addAll(getServiceClassSet());
         beanClassSet.addAll(getControllerClassSet());

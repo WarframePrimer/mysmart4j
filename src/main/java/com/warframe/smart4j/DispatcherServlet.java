@@ -41,6 +41,8 @@ import java.util.Map;
 @WebServlet(urlPatterns = "/*", loadOnStartup = 0)
 public class DispatcherServlet extends HttpServlet {
 
+
+
     /**
      * 进行初始化，很重要
      *
@@ -82,6 +84,7 @@ public class DispatcherServlet extends HttpServlet {
 
             //处理Action处理器
             Handler handler = ControllerHelper.getHandler(requestMethod, requestPath);
+            //存在相关映射
             if (handler != null) {
                 //获取Controller类及其实例
                 Class<?> controllerClass = handler.getControllerClass();
@@ -178,6 +181,7 @@ public class DispatcherServlet extends HttpServlet {
                 }
             }
         }finally {
+
             ServletHelper.destroy();
         }
 
