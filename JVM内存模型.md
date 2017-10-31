@@ -1,4 +1,7 @@
 Java虚拟机定义了若干种程序运行期间会使用到的运行时数据区，其中有一些会随着虚拟机启动而创建，随着虚拟机退出而销毁。另外一些则是与线程一一对应的，这些与线程对应的数据区域会随着线程开始和结束而创建和销毁。
+
+![image](https://raw.githubusercontent.com/WarframePrimer/mysmart4j/master/img/JVM.png)
+
 ## PC寄存器
   JVM可以支持多线程同时执行，每一条JVM线程都有自己的pc(program counter)寄存器。在任意时刻，一条JVM虚拟机只会执行一个方法的代码，这个正在被线程执行的方法称为该线程的`当前方法(current method)`。如果这个方法不是native的，pc寄存器就保存JVM正在执行的字节码指令的地址，如果该方法是native的，pc寄存器的值就是undefined。pc寄存器的容量至少应当能保存一个returnAddress类型的数据或者一个与平台相关的本地指针的值。
 ## Java虚拟机栈
