@@ -1,6 +1,8 @@
 
 # 集合知识梳理(网上整理)
 
+![image](https://github.com/WarframePrimer/mysmart4j/blob/master/img/Collection.jpg)
+
 ## 一、List: 有顺序已线性方式存储，可以存放重复对象
   线程安全方法：List list = Collections.synchronizedList(new LinkedList(...));  
   
