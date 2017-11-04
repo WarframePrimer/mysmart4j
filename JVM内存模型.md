@@ -47,6 +47,6 @@ Java虚拟机定义了若干种程序运行期间会使用到的运行时数据�
  ![image](https://github.com/WarframePrimer/mysmart4j/blob/master/img/newObject1.jpg)
  
  - 如果使用的是`直接指针访问`方式，Java堆对象的布局中就必须考虑如何放置访问类型数据的相关信息，reference中直接存储的就是对象地址，如下如所示：
-  ![image](https://github.com/WarframePrimer/mysmart4j/blob/master/img/newObject12.jpg)
+ ![image](https://github.com/WarframePrimer/mysmart4j/blob/master/img/newObject2.jpg)
  
 
