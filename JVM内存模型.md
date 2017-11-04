@@ -43,7 +43,10 @@ Java虚拟机定义了若干种程序运行期间会使用到的运行时数据�
   
 # 关于对象的访问
    由于reference类型在Java虚拟机规范中指规定了一个指向对象的引用，并没有定义这个引用应该通过哪种方式去定位，以及访问到Java堆中的对象的具体位置，因此不同虚拟机实现的对象访问会有所不同，主流的访问方式有两种：`使用句柄`和`直接指针`。  
- - 如果使用句柄访问方式，Java堆中将会划分出一块内存来作为句柄池，reference中存储的就是对象的句柄地址，而句柄中包含了对象实例数据和类型数据各自的具体地址信息，如下图所示：
- ![image]()
+ - 如果使用`句柄访问`方式，Java堆中将会划分出一块内存来作为句柄池，reference中存储的就是对象的句柄地址，而句柄中包含了对象实例数据和类型数据各自的具体地址信息，如下图所示：
+ ![image](https://github.com/WarframePrimer/mysmart4j/blob/master/img/newObject1.jpg)
+ 
+ - 如果使用的是`直接指针访问`方式，Java堆对象的布局中就必须考虑如何放置访问类型数据的相关信息，reference中直接存储的就是对象地址，如下如所示：
+  ![image](https://github.com/WarframePrimer/mysmart4j/blob/master/img/newObject12.jpg)
  
 
