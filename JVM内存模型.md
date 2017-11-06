@@ -106,6 +106,17 @@ Full GC是发生在老年代的垃圾收集动作，所采用的是标记-清除
 
 |参数选项|相关信息|
 |---|---|
+|-Xms|初始堆大小：-Xms256m|
+|-Xmx|最大堆大小：-Xmx512m|
+|-Xmn|新生代大小：通常为Xmx的1/3或1/4|
+|-Xss|每个线程堆栈大小为1M|
+|-XX:NewRatio|新生代和老年代的比例|
+|-XX:SurvivorRatio|新生代中Eden和Survivor的比例|
+|-XX:PermSize|永久代(方法区)的初始大小|
+|-XX:MaxPermSize|永久代的最大值|
+|-XX:+PrintGCDetails|打印GC信息|
+|XX:+HeapDumpOnOutOfMemoryError|让虚拟机在发生OOM是Dump出当前的内存堆转储快照|
+
 
 
 
