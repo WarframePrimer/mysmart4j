@@ -157,10 +157,15 @@ public class DispatcherServlet extends HttpServlet {
                             resp.sendRedirect(req.getContextPath() + path);
                         } else {
                             //path没有以/开头,就表示跳转到一个jsp页面,并附上相关数据model
+                            //这一步是为了将所需要的参数信息add到view对象中的model中以便之后进行调用
+                            // (一般之后的跳转都是跳转到jsp页面，而model数据就是jsp页面中所需要呈现的数据信息)
                             Map<String, Object> model = view.getModel();
                             for (Map.Entry<String, Object> entry : model.entrySet()) {
+                                //将model数据信息设置到request中，jsp可以直接调用
+                                //request是jsp九大内置对象之一
                                 req.setAttribute(entry.getKey(), entry.getValue());
                             }
+                            //一般都是跳转到jsp页面中model信息一般存到都是jsp页面中需要显示的模型数据
                             req.getRequestDispatcher(ConfigHelper.getAppJspPath() + path).forward(req, resp);
                         }
                     }

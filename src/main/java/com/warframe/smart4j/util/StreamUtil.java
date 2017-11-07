@@ -43,6 +43,7 @@ public final class StreamUtil {
      * 就是简单的读写操作
      */
     public static void copyStream(InputStream inputStream, OutputStream outputStream) {
+        //还可以使用try-with-resources的形式，可以简化关闭流的操作
         try {
             int length;
             byte[] buffer = new byte[4 * 1024];

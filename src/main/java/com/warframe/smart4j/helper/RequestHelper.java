@@ -33,6 +33,7 @@ public final class RequestHelper {
 
 
     //将请求中的参数转换为List<FormParam>
+    //这里获取到的是request请求(Get)中的参数
     private static List<FormParam> parseParameterNames(HttpServletRequest request) {
         List<FormParam> formParamList = new ArrayList<>();
         Enumeration<String> paramNames = request.getParameterNames();
@@ -61,6 +62,7 @@ public final class RequestHelper {
     }
 
     //流中获取到参数名和参数值
+    //这里获取到的是request请求(Post)中的参数
     private static List<FormParam> parseInputStream(HttpServletRequest request) throws IOException {
         List<FormParam> formParamList = new ArrayList<>();
         String body = CodecUtil.decodeURL(StreamUtil.getString(request.getInputStream()));

@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
  * @Author warframe[github.com/WarframePrimer]
  * @Date 2017/10/25 14:48
  *
- * 定义事务注解
+ * 定义事务注解，对Service中的方法申明使用事务的方式
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)

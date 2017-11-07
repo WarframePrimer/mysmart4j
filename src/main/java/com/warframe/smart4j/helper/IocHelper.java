@@ -1,6 +1,5 @@
 package com.warframe.smart4j.helper;
 
-import com.sun.javadoc.FieldDoc;
 import com.warframe.smart4j.annotation.Inject;
 import com.warframe.smart4j.util.ArrayUtil;
 import com.warframe.smart4j.util.CollectionUtil;
