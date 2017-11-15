@@ -86,8 +86,8 @@
 ### 6.TreeSet  
 - TreeSet和HashSet的主要不同在于TreeSet对于排序的支持，TreeSet基于TreeMap实现。  
 ### 7.HashMap  
-- HashMap空构造，将loadFactor设为默认的0.75，threshold设置为12，并创建一个大小为16的Entry对象数组。  
-- 基于数组+链表(散列表)实现，将key-value看成一个整体，存放于Entity[]数组中，put的时候根据key hash后的hashcode和数组length-1按位与的结果判断放在数组的哪个位置，如果该数组位置上以存放其他元素，则在这个位置上的元素以链表的形式存放，否则就直接存放。  
+- HashMap空构造，将loadFactor设为默认的0.75，threshold设置为12，并创建一个大小为16的Entry对象数组。    
+- 基于数组+链表(散列表)实现，将key-value看成一个整体，存放于Entity[]数组中，put的时候根据key hash后的hashcode和数组length-1按位与的结果判断放在数组的哪个位置，如果该数组位置上以存放其他元素，则在这个位置上的元素以链表的形式存放，否则就直接存放。  
 - 当系统决定存储HashMap中的key-value对时，完全没有考虑Entry中的value，仅仅根据key来计算并决定每个Entry的存储位置。完全可以把Map集合中的value当成key的附属，当系统决定了key的存储位置之后，value随之保存。get取值也是根据key的hashCode确定在数组的位置，在根据key的equals确定在链表处的位置。  
   
 
