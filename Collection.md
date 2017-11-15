@@ -89,9 +89,14 @@
 - HashMap空构造，将loadFactor设为默认的0.75，threshold设置为12，并创建一个大小为16的Entry对象数组。    
 - 基于数组+链表(散列表)实现，将key-value看成一个整体，存放于Entity[]数组中，put的时候根据key hash后的hashcode和数组length-1按位与的结果判断放在数组的哪个位置，如果该数组位置上以存放其他元素，则在这个位置上的元素以链表的形式存放，否则就直接存放。  
 - 当系统决定存储HashMap中的key-value对时，完全没有考虑Entry中的value，仅仅根据key来计算并决定每个Entry的存储位置。完全可以把Map集合中的value当成key的附属，当系统决定了key的存储位置之后，value随之保存。get取值也是根据key的hashCode确定在数组的位置，在根据key的equals确定在链表处的位置。  
-  
-
-  
+- 扩容resize():当HashMap中的元素越来越多的时候，hash冲突的几率也就越来越高，因为数组的长度是固定的。所以为了提高查询的效率，就要对HashMap的数组进行扩容，而在HashMap数组扩容之后，最消耗性能的地方出现了：原数组中的数据必须重新计算其在新数组中的位置，并重新存放，这就是resize。当HashMap中的元素个数超过数组大小*loadFactor时，就会进行数组扩容，loadFactor的默认值为0.75。  
+- 负载因子衡量的是一个散列表的空间的使用程度，负载因子越大表示散列表的装填程度越高，反之愈小。负载因子越大，对空间的利用更充分，但后果是查找效率的降低；如果负载因子太小，那么散列表的数据将过于稀疏，浪费空间。  
+- HashMap的实现中，通过threshold字段来判断HashMap的最大容量。threshold就是在此loadFactor和capacity对应下允许的最大元素数目，超过这个数目就重新resize(),以降低实际的负载因子。
+- 如果预先知道HashMap中元素的个数，那么预设元素的个数能够有效的提高HashMap的性能，因为可以降低触发resize的概率，而resize及其消耗性能。
+### 8.HashTable
+- HashTable数据结构的原理大致与HashMap一致，区别在于put、get时加了同步关键字，而且HashTable不可存放null值。
+### 9.TreeMap
+- TreeMap基于红黑树的实现，因此要求一定要有key比较的方法，要么传入Comparator实现，要么key对象实现Comparable接口。在put操作时，基于红黑树的方式遍历，基于comparator来比较key应放在树的左边还是右边，如找到相等的key，则直接替换value。
  
   
   
