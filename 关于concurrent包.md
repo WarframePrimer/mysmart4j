@@ -36,7 +36,22 @@
         线程A释放一个锁，实质上是线程A向接下来将要获取这个锁的线程发出了(线程A对共享变量所做修改的)消息。   
         线程B获取一个锁，实质上是线程B接受了之前某个线程发出的(在释放锁之前对共享变量所做修改的)消息。  
         线程A释放锁，随后线程B获取这个锁，实质上是线程A通过主内存向线程B发送消息。  
-    由于volatile仅仅保证对单个volatile变量的读/写具有原子性，而监视器的互斥执行的特性可以确保对整个临界区代码的执行具有原子性。在功能上，监视器锁比volatile更强大；在可伸缩性和执行性能上，volatile更具有优势。    
+    由于volatile仅仅保证对单个volatile变量的读/写具有原子性，而监视器的互斥执行的特性可以确保对整个临界区代码的执行具有原子性。在功能上，监视器锁比volatile更强大；在可伸缩性和执行性能上，volatile更具有优势。
+```
+volatile boolean flag = false;
+    
+    while(!flag){doSomething();}
+    public void setFlag(){flag=true;}
+    
+    volatile boolean inited = false;
+    
+    //线程1
+    context = loadContext();
+    inited = true;
+    //线程2
+    while(!inited){sleep();}
+    doSomethingWithConfig(context);
+```
     
 - AbstractQueueSynchronizer(AQS)
 
